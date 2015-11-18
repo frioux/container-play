@@ -75,4 +75,14 @@ Every 0.3s: pstree -Up | grep dash   Tue Nov 17 15:43:06 2015
 
 ```
 
-Go back to Terminal 1 and press Ctrl+c.  Terminal 2 will be completely blank.
+Go back to Terminal 1 and press Ctrl+C.  Terminal 2 will be completely blank.
+
+This is because `contained-orphans.sh` sets up a `pid_namespace` (see
+`pid_namespaces(7)`), and when you kill the first process in the namespace, all
+other processes get a `SIGKILL`.  Here is the exact doc on my system:
+
+```
+If the "init" process of a PID namespace terminates, the kernel terminates all of the
+processes in the namespace via a SIGKILL signal.  This  behavior  reflects  the  fact
+that  the  "init"  process is essential for the correct operation of a PID namespace.
+```
